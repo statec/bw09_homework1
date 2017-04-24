@@ -1,114 +1,153 @@
 ---
-title       : Insert the chapter title here
-description : Insert the chapter description here
+title       : Homework 1
+description :
 attachments :
-  slides_link : https://s3.amazonaws.com/assets.datacamp.com/course/teach/slides_example.pdf
+  slides_link :
 
---- type:MultipleChoiceExercise lang:r xp:50 skills:1 key:f7232d9cb1
-## A really bad movie
+--- type:NormalExercise lang:r xp:100 skills:1 key:a055bddcaf
+## 1. Einlesen von Datensätzen
 
-Have a look at the plot that showed up in the viewer to the right. Which type of movie has the worst rating assigned to it?
+
+Ihnen wurde der Preisverlauf der Henkel Aktie eines Jahres unter der angegebenen URL hinterlegt. Lesen Sie den Datensatz als `CSV-Datei` ein. 
+
+(Quelle: de.finance.yahoo.com)
+
 
 *** =instructions
-- Adventure
-- Action
-- Animation
-- Comedy
+
+- Lesen Sie die Daten ein und speichern Sie diese in `henkel`.
+- Schauen Sie sich die Daten in der Konsole an.
 
 *** =hint
-Have a look at the plot. Which color does the point with the lowest rating have?
+- Nutzen Sie die `read.csv()` Funktion.
+- Setzen Sie den Pfad als Argument der Funktion `read.csv()` in "Anführungszeichen".
+- Zum ausgeben in der Konsole reicht `henkel`.
 
 *** =pre_exercise_code
 ```{r}
-# The pre exercise code runs code to initialize the user's workspace.
-# You can use it to load packages, initialize datasets and draw a plot in the viewer
-
-movies <- read.csv("http://s3.amazonaws.com/assets.datacamp.com/course/introduction_to_r/movies.csv")
-
-library(ggplot2)
-
-ggplot(movies, aes(x = runtime, y = rating, col = genre)) + geom_point()
-```
-
-*** =sct
-```{r}
-# SCT written with testwhat: https://github.com/datacamp/testwhat/wiki
-
-msg_bad <- "That is not correct!"
-msg_success <- "Exactly! There seems to be a very bad action movie in the dataset."
-test_mc(correct = 2, feedback_msgs = c(msg_bad, msg_success, msg_bad, msg_bad))
-```
-
---- type:NormalExercise lang:r xp:100 skills:1 key:e923d4a435
-## More movies
-
-In the previous exercise, you saw a dataset about movies. In this exercise, we'll have a look at yet another dataset about movies!
-
-A dataset with a selection of movies, `movie_selection`, is available in the workspace.
-
-*** =instructions
-- Check out the structure of `movie_selection`.
-- Select movies with a rating of 5 or higher. Assign the result to `good_movies`.
-- Use `plot()` to  plot `good_movies$Run` on the x-axis, `good_movies$Rating` on the y-axis and set `col` to `good_movies$Genre`.
-
-*** =hint
-- Use `str()` for the first instruction.
-- For the second instruction, you should use `...[movie_selection$Rating >= 5, ]`.
-- For the plot, use `plot(x = ..., y = ..., col = ...)`.
-
-*** =pre_exercise_code
-```{r}
-# You can also prepare your dataset in a specific way in the pre exercise code
-load(url("https://s3.amazonaws.com/assets.datacamp.com/course/teach/movies.RData"))
-movie_selection <- Movies[Movies$Genre %in% c("action", "animated", "comedy"), c("Genre", "Rating", "Run")]
-
-# Clean up the environment
-rm(Movies)
 ```
 
 *** =sample_code
 ```{r}
-# movie_selection is available in your workspace
 
-# Check out the structure of movie_selection
-
-
-# Select movies that have a rating of 5 or higher: good_movies
+# die Datei liegt in https://www.uni-duesseldorf.de/redaktion/fileadmin/redaktion/Fakultaeten/Wirtschaftswissenschaftliche_Fakultaet/Statistik/Kurse/BW_09/henkel.csv
 
 
-# Plot Run (i.e. run time) on the x axis, Rating on the y axis, and set the color using Genre
+# Geben Sie die eingelesenen Daten in der Konsole aus
 
 ```
 
 *** =solution
 ```{r}
-# movie_selection is available in your workspace
+# der Pfad der Datei ist 
+henkel <- read.csv("https://www.uni-duesseldorf.de/redaktion/fileadmin/redaktion/Fakultaeten/Wirtschaftswissenschaftliche_Fakultaet/Statistik/Kurse/BW_09/henkel.csv")
 
-# Check out the structure of movie_selection
-str(movie_selection)
+# Schauen Sie sich die Daten in der Konsole an
+henkel
 
-# Select movies that have a rating of 5 or higher: good_movies
-good_movies <- movie_selection[movie_selection$Rating >= 5, ]
-
-# Plot Run (i.e. run time) on the x axis, Rating on the y axis, and set the color using Genre
-plot(good_movies$Run, good_movies$Rating, col = good_movies$Genre)
 ```
 
 *** =sct
 ```{r}
-# SCT written with testwhat: https://github.com/datacamp/testwhat/wiki
-
-test_function("str", args = "object",
-              not_called_msg = "You didn't call `str()`!",
-              incorrect_msg = "You didn't call `str(object = ...)` with the correct argument, `object`.")
-
-test_object("good_movies")
-
-test_function("plot", args = "x")
-test_function("plot", args = "y")
-test_function("plot", args = "col")
-
+test_function("read.csv", args = c("file"))
+test_object("henkel")
+test_output_contains("henkel")
 test_error()
+success_msg("Sehr gut!")
 
-success_msg("Good work!")
+```
+
+
+
+--- type:NormalExercise lang:r xp:100 skills:1 key:122133c624
+## Missing Values (I)
+
+Gegeben ist der Datensatz `aktien`. Er besteht aus den Daten von Henkel (Frankfurter Börse) und von Exxon Mobile (NYSE). Länderspezifische Feiertage sind mit `NA` gekennzeichnet. Gesucht ist eine geeiegnete Möglichkeit, zur Ersetzung diese Felder durch passende Werte.
+
+(Quelle der Daten: de.finance.yahoo.com)
+
+*** =instructions
+Ersetzen Sie die NA Felder in dem Datensatz durch:
+
+- den Durchschnitt der gesamten Zeitreihe. Hierfür können Sie die `mean()`-Funktion nutzen.
+- in den [ ]-Klammern hinter der Variable stehen die Auswahlbedingungen. Beispielsweise: `spalte[is.na(spalte)]` gibt nur die Felder aus `spalte` zurück, in denen NA steht.
+
+Nehmen Sie hierbei jeweils die Spalten henkel und exxon.
+*** =hint
+- `na.rm = TRUE` entfernt die NA Felder, zur Berechnung des Durchschnitts.
+- `is.na(daten)` findet die NAs in den daten.
+-  Zur Ausgabe in der Konsole können Sie auch `print(Objekt)` nutzen
+
+*** =pre_exercise_code
+```{r}
+# Einlesen der Daten
+exxon <- read.csv("https://www.uni-duesseldorf.de/redaktion/fileadmin/redaktion/Fakultaeten/Wirtschaftswissenschaftliche_Fakultaet/Statistik/Kurse/BW_09/exxon.csv")
+henkel <- read.csv("https://www.uni-duesseldorf.de/redaktion/fileadmin/redaktion/Fakultaeten/Wirtschaftswissenschaftliche_Fakultaet/Statistik/Kurse/BW_09/henkel.csv")
+
+# Zusammenführung der Daten
+library(dplyr)
+# Merging der Datensätze
+aktienjoin <- full_join(exxon, henkel, by = "Date")
+
+# Verkleinerung der Datensätze
+aktien <- select(aktienjoin, Date, exxon = Open.x, henkel = Open.y )
+
+# class Datum setzen
+aktien$Date <- as.Date(aktien$Date)
+remove(aktienjoin)
+
+# Nach Datum sortieren
+aktien <- aktien[order(aktien$Date),]
+
+# class Datum setzen
+aktien$Date <- as.Date(aktien$Date)
+
+```
+
+*** =sample_code
+```{r}
+# Schaue, an welchen Tagen sich NAs befinden
+aktien$Date[is.na(aktien$exxon)]
+aktien$Date[is.na(aktien$henkel)]
+
+# Ersetzen Sie NA in der Spalte 'henkel' durch den Durchschnitt der Spalte
+aktien$___[is.na(___)] <- ___(___, na.rm = TRUE)
+
+# Ersetzen Sie NA in der Spalte 'exxon' durch den Durchschnitt der Spalte
+
+
+# Geben Sie die geänderten Spalten in der Konsole aus
+
+
+```
+
+*** =solution
+```{r}
+# Schaue, an welchen Tagen sich NAs befinden
+aktien$Date[is.na(aktien$exxon)]
+aktien$Date[is.na(aktien$henkel)]
+
+# Ersetzen Sie NA in der Spalte 'henkel' durch den Durchschnitt der Spalte
+aktien$henkel[is.na(aktien$henkel)] <- mean(aktien$henkel, na.rm = TRUE)
+
+# Ersetzen Sie NA in der Spalte 'exxon' durch den Durchschnitt der Spalte
+aktien$exxon[is.na(aktien$exxon)] <- mean(aktien$exxon, na.rm = TRUE)
+
+# Geben Sie die geänderten Spalten in der Konsole aus
+aktien$henkel
+aktien$exxon
+
+```
+
+*** =sct
+```{r}
+
+test_function("mean", index = 1, args = c("x", "na.rm"))
+test_function("mean", index = 2, args = c("x", "na.rm"))
+test_object("aktien")
+test_output_contains("aktien$henkel")
+test_output_contains("aktien$exxon")
+test_error()
+success_msg("Sehr gut!")
+
 ```
