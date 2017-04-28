@@ -5,7 +5,7 @@ attachments :
   slides_link :
 
 --- type:NormalExercise lang:r xp:100 skills:1 key:a055bddcaf
-## Einlesen von Datensätzen in R
+## Einlesen von Datensätzen
 
 Ihnen wurde der Preisverlauf der Henkel Aktie eines Jahres als `CSV-Datei` unter der angegebenen URL zur Verfügung gestellt.
 
@@ -16,7 +16,7 @@ Ihnen wurde der Preisverlauf der Henkel Aktie eines Jahres als `CSV-Datei` unter
 *** =instructions
 
 - Lesen Sie die Daten ein und speichern Sie diese in `henkel`.
-- Schauen Sie sich die Daten in der Konsole an.
+
 
 *** =hint
 - Nutzen Sie die `read.csv()` Funktion.
@@ -32,8 +32,7 @@ Ihnen wurde der Preisverlauf der Henkel Aktie eines Jahres als `CSV-Datei` unter
 
 # die Datei liegt in https://www.uni-duesseldorf.de/redaktion/fileadmin/redaktion/Fakultaeten/Wirtschaftswissenschaftliche_Fakultaet/Statistik/Kurse/BW_09/henkel.csv
 
-
-# Geben Sie die eingelesenen Daten in der Konsole aus
+henkel <- 
 
 ```
 
@@ -41,17 +40,12 @@ Ihnen wurde der Preisverlauf der Henkel Aktie eines Jahres als `CSV-Datei` unter
 ```{r}
 # der Pfad der Datei ist 
 henkel <- read.csv("https://www.uni-duesseldorf.de/redaktion/fileadmin/redaktion/Fakultaeten/Wirtschaftswissenschaftliche_Fakultaet/Statistik/Kurse/BW_09/henkel.csv")
-
-# Schauen Sie sich die Daten in der Konsole an
-henkel
-
 ```
 
 *** =sct
 ```{r}
 test_function("read.csv", args = c("file"))
 test_object("henkel")
-test_output_contains("henkel")
 test_error()
 success_msg("Sehr gut!")
 
@@ -59,7 +53,7 @@ success_msg("Sehr gut!")
 
 
 
---- type:NormalExercise lang:r xp:100 skills:1 key:122133c624
+--- type:NormalExercise lang:r xp:200 skills:1 key:122133c624
 ## Missing Values (I)
 
 
@@ -118,7 +112,6 @@ aktien$___[is.na(___)] <- ___(___, na.rm = TRUE)
 # Ersetzen Sie NA in der Spalte 'exxon' durch den Durchschnitt der Spalte
 
 
-# Geben Sie die geänderten Spalten in der Konsole aus
 
 
 ```
@@ -135,10 +128,6 @@ aktien$henkel[is.na(aktien$henkel)] <- mean(aktien$henkel, na.rm = TRUE)
 # Ersetzen Sie NA in der Spalte 'exxon' durch den Durchschnitt der Spalte
 aktien$exxon[is.na(aktien$exxon)] <- mean(aktien$exxon, na.rm = TRUE)
 
-# Geben Sie die geänderten Spalten in der Konsole aus
-aktien$henkel
-aktien$exxon
-
 ```
 
 *** =sct
@@ -147,8 +136,7 @@ aktien$exxon
 test_function("mean", index = 1, args = c("x", "na.rm"))
 test_function("mean", index = 2, args = c("x", "na.rm"))
 test_object("aktien")
-test_output_contains("aktien$henkel")
-test_output_contains("aktien$exxon")
+
 test_error()
 success_msg("Sehr gut!")
 
@@ -156,7 +144,7 @@ success_msg("Sehr gut!")
 
 
 
---- type:NormalExercise lang:r xp:100 skills:1 key:552b0d5936
+--- type:NormalExercise lang:r xp:300 skills:2 key:552b0d5936
 ## Missing Values (II)
 
 Gegeben ist wieder der Datensatz `aktien` (bereits eingelesen). Ersetzen Sie nun die NAs im Datensatz durch den gleitenden Durchschnitt über 10 Tage. Nehmen Sie hierfür den Durchschnitt von den 5 vorherigen und 5 folgenden Werten. 
@@ -210,36 +198,34 @@ aktien <- aktien[order(aktien$Date),]
 
 *** =sample_code
 ```{r}
-# Henkel 
-# Finde den Index und schreibe ihn in index1 (chronologisch erstes Datum)
+### Henkel 
+# Finde den Index des Feiertags und schreibe ihn in index1 ("2016-10-31")
 index1 <- which(___ == ___)
+# Wert vor der Ersetzung
+aktien$henkel[index1]
 # durch Durchschnitt ersetzen
-aktien$henkel[___] <- ___(c(___[c((index1-___):(index1-___),(index1+___):(index1+___))]))
-# Neuer Wert
-aktien$henkel[___]
+aktien$henkel[___] <- ___(___[c((index1-___):(index1-___),(index1+___):(index1+___))])
+# Wert nach der Ersetzung
+aktien$henkel[index1]
 
 
-# Finde den Index und schreibe ihn in index2 (chronologisch zweites Datum)
-
-# durch Durchschnitt ersetzen
-
-# Neuer Wert
-
-
-# Exxon 
-# Finde den Index und schreibe ihn in index3 (chronologisch erstes Datum)
+# Finde den Index des Feiertags und schreibe ihn in index2 ("2016-10-03")
 
 # durch Durchschnitt ersetzen
 
-# Neuer Wert
 
-
-
-# Finde den Index und schreibe ihn in index4 (chronologisch zweites Datum)
+### Exxon 
+# Finde den Index des Feiertags und schreibe ihn in index3 ("2016-09-05")
 
 # durch Durchschnitt ersetzen
 
-# Neuer Wert
+
+
+# Finde den Index des Feiertags und schreibe ihn in index4 ("2016-11-24")
+
+# durch Durchschnitt ersetzen
+
+
 
 
 ```
@@ -251,15 +237,13 @@ aktien$henkel[___]
 index1 <- which(aktien$Date == "2016-10-31")
 # durch Durchschnitt ersetzen
 aktien$henkel[index1] <- mean(c(aktien$henkel[c((index1-5):(index1-1),(index1+1):(index1+5))]))
-# Neuer Wert
-aktien$henkel[index1]
+
 
 # Finde den Index 2 (chronologisch zweites Datum)
 index2 <- which(aktien$Date == "2016-10-03")
 # durch Durchschnitt ersetzen
 aktien$henkel[index2] <- mean(c(aktien$henkel[c((index2-5):(index2-1),(index2+1):(index2+5))]))
-# Neuer Wert
-aktien$henkel[index2]
+
 
 
 # Exxon 
@@ -267,15 +251,13 @@ aktien$henkel[index2]
 index3 <- which(aktien$Date == "2016-09-05")
 # durch Durchschnitt ersetzen
 aktien$exxon[index3] <- mean(c(aktien$exxon[c((index3-5):(index3-1),(index3+1):(index3+5))]))
-# Neuer Wert
-aktien$exxon[index3]
+
 
 # Finde den Index 4 (chronologisch zweites Datum)
 index4 <- which(aktien$Date == "2016-11-24")
 # durch Durchschnitt ersetzen
 aktien$exxon[index4] <- mean(c(aktien$exxon[c((index4-5):(index4-1),(index4+1):(index4+5))]))
-# Neuer Wert
-aktien$exxon[index4]
+
 ```
 
 *** =sct
@@ -292,10 +274,7 @@ test_function("mean", index = 1, args = c("x"))
 test_function("mean", index = 2, args = c("x"))
 test_function("mean", index = 3, args = c("x"))
 test_function("mean", index = 4, args = c("x"))
-test_output_contains("aktien$henkel[index1]")
-test_output_contains("aktien$henkel[index2]")
-test_output_contains("aktien$exxon[index3]")
-test_output_contains("aktien$exxon[index4]")
+
 test_error()
 success_msg("Sehr gut!")
 ```
@@ -303,7 +282,7 @@ success_msg("Sehr gut!")
 --- type:NormalExercise lang:r xp:100 skills:1 key:daf78b06f4
 ## Missing Values (III)
 
-Ihre Ergebnisse aus der letzten Aufgabe sollen nun zum Vergleich der Methoden geplottet werden. Benutzen Sie die Daten der Henkel Aktie. Vergleichen Sie die Methoden der Ersetzung. Der Datensatz bei dem die NAs durch den gesamten Durchschnitt ersetzt wurden ist `aktien2` (bereits eingelesen). Der, bei dem die NAs durch den gleitenden 10-er Durchschnitt ersetzt wurden, ist `aktien` (bereits eingelesen).
+Ihre Ergebnisse aus der letzten Aufgabe sollen nun zum Vergleich der Methoden geplottet werden. Benutzen Sie die Daten der Henkel Aktie und vergleichen Sie die Methoden der Ersetzung. Der Datensatz bei dem die NAs durch den gesamten Durchschnitt ersetzt wurden ist `aktien2` (bereits eingelesen). Der, bei dem die NAs durch den gleitenden 10-er Durchschnitt ersetzt wurden, ist `aktien` (bereits eingelesen).
 
 
 Schauen Sie sich beide Plots an und vergleichen Sie die ersetzten Stellen (Feiertage am "2016-10-31" und "2016-10-03"). 
@@ -311,7 +290,7 @@ Schauen Sie sich beide Plots an und vergleichen Sie die ersetzten Stellen (Feier
 Hilfe zur `plot()` bekommen Sie wie immer durch `?plot()`.
 
 *** =instructions
-- Plotten Sie die Zahlenreihen 
+- Plotten Sie die Zeitreihen (type="l")
 - Beschriften Sie die x-Achse mit "Datum"
 - Beschriften Sie die y-Achse mit "Eroeffnungspreis (€)"
 *** =hint
@@ -424,8 +403,6 @@ x_tminus1 <-
 x_t <- 
 # Berechnung der Rendite
 renditeH <- 
-# Geben Sie hier die berechnete Rendite in der Konsole aus
-
 ```
 
 *** =solution
@@ -439,9 +416,6 @@ x_t <- aktien$henkel[2:length(aktien$henkel)]
 # Berechnung der Rendite
 renditeH <- (x_t - x_tminus1) / x_tminus1
 
-# Geben Sie hier die berechnete Rendite in der Konsole aus
-renditeH
-
 ```
 
 *** =sct
@@ -449,7 +423,6 @@ renditeH
 test_object("x_tminus1")
 test_object("x_t")
 test_object("renditeH")
-test_output_contains("renditeH")
 test_error()
 success_msg("Sehr gut!")
 
@@ -458,9 +431,9 @@ success_msg("Sehr gut!")
 
 
 --- type:NormalExercise lang:r xp:100 skills:1 key:f014685cd8
-## Berechnungen in R: Rendite (II)
+## Rendite (II)
 
-Der Datensatz liegt in `aktien`. Nun sollen die stetigen (logarithmischen) Renditen für jeden Tag berechnet werden.
+Das Objekt `aktien` mit den benötigten Daten ist bereits eingelesen. Nun sollen die stetigen (logarithmischen) Renditen für jeden Tag berechnet werden.
 
 Tipps:
 
@@ -506,8 +479,6 @@ x_tminus1 <-
 x_t <- 
 # Berechnung der Rendite
 logRenditeH <- 
-# Geben Sie hier die berechnete log-Rendite in der Konsole aus
-
 ```
 
 *** =solution
@@ -518,9 +489,6 @@ x_tminus1 <- aktien$henkel[1:(length(aktien$henkel)-1)]
 x_t <- aktien$henkel[2:length(aktien$henkel)]
 # Berechnung der Rendite
 logRenditeH <- log(x_t) - log(x_tminus1)
-# Geben Sie hier die berechnete Rendite in der Konsole aus
-logRenditeH
-
 ```
 
 *** =sct
@@ -528,7 +496,6 @@ logRenditeH
 test_object("x_tminus1")
 test_object("x_t")
 test_object("logRenditeH")
-test_output_contains("logRenditeH")
 test_error()
 success_msg("Super!")
 
@@ -538,7 +505,7 @@ success_msg("Super!")
 
 
 
---- type:NormalExercise lang:r xp:100 skills:1 key:306bec6cc9
+--- type:NormalExercise lang:r xp:300 skills:2 key:306bec6cc9
 ## Berechnung des gleitenden Durchschnitts
 
 Die benötigten Daten sind im Objekt `aktien` bereits eingelesen.
@@ -596,65 +563,8 @@ test_error()
 
 
 
---- type:NormalExercise lang:r xp:100 skills:1 key:1d68560355
-## Analyse der Daten
-Im Datensatz `aktien` (bereits eingelesen) ist der Eröffnungspreis und die jeweilige Tagesrendite der Exxon Aktie enthalten. 
 
-Wir betrachten die Volatilität der Zeitreihe. Bei dem Plot der Eröffnungspreise (Plot 1) kann man nur grob schätzen, wo die Volatilität am stärksten ist. Im Plot 2 sehen Sie die Rendite der Zeitreihe geplottet. Hier kann man das Ergebnis schon etwas besser heraus lesen.
-
-Wo ist die Volatilität am höchsten? Sollte die Lösung nicht eindeutig sein, können Sie auch die Ergebnisse des `var()` Befehls für die angegebenen Zeiträume vergleichen.
-
-
-
-*** =instructions
-- Anfang August 2016
-- Ende September 2016
-
-*** =hint
-
-*** =pre_exercise_code
-```{r}
-library(dplyr)
-# Einlesen der Daten 
-aktien <- read.csv("https://www.uni-duesseldorf.de/redaktion/fileadmin/redaktion/Fakultaeten/Wirtschaftswissenschaftliche_Fakultaet/Statistik/Kurse/BW_09/exxon.csv")
-
-# Datum als class Date initialisieren
-aktien$Date <- as.Date(aktien$Date)
-
-# sortieren Datensatz nach Datum
-aktien <- aktien[order(aktien$Date),]
-
-# Verkleinerung der Datensätze
-aktien <- select(aktien, Date, Open)
-plot(aktien$Date, aktien$Open, type = "l", main = "Exxon Aktie 2016-2017", xlab = "Datum", ylab = "Eröffnungspreis ($)")
-
-# Funktion zur Berechnung der Rendite
-rendite <- function(zeitreihe){ 
-  r <- zeitreihe[1:(length(zeitreihe)-1)];  
-  ren <- zeitreihe[2:length(zeitreihe)];
-  ren <- (ren - r) / r;
-  return(ren)     
-}
-
-# Rendite für Eröffnungspreise berechnen
-exRen <- rendite(aktien$Open) 
-
-# Rendite zum Datensatz hizufügen, vorne 0
-exRen <- c(0,exRen)
-aktien[ , "Rendite"] <- exRen
-
-plot(aktien$Date, aktien$Rendite, type = "l", main = "Exxon Aktie 2016-2017", xlab = "Datum", ylab = "Rendite")
-
-```
-
-*** =sct
-```{r}
-msg_bad <- "Das stimmt nicht! Nutze die Konsole und berechne das Datum ganz genau."
-msg_success <- "Richtig!"
-test_mc(correct = 2, feedback_msgs = c(msg_bad, msg_bad,  msg_success))
-```
-
---- type:NormalExercise lang:r xp:100 skills:1 key:72c5438fee
+--- type:NormalExercise lang:r xp:50 skills:1 key:72c5438fee
 ## Histogramm
 
 Der Datensatz `aktien` mit den berechneten Renditen für die  Exxon Aktie ist bereits eingelesen. Erstellen Sie ein Histogramm über die Verteilung der Renditen. 
@@ -702,7 +612,6 @@ renAktien <- rendite(aktien$Open)
 # Rendite zum Datensatz hinzufügen
 renAktien <- c(0,renAktien)
 aktien[ , "Rendite"] <- renAktien
-
 ```
 
 *** =sample_code
