@@ -514,7 +514,9 @@ Benutzen sie für diese Aufgabe `cumsum(vektor)`. Was der Befehlt macht können 
 
 *** =instructions
 
-Berechnen Sie den gleitenden 10-er Durchschnitt von `aktien$henkel` und schreiben Sie ihn in `rsum`.
+Berechnen Sie den gleitenden 10-er Durchschnitt von `aktien$henkel` und schreiben Sie ihn in `rsum`. 
+
+Hinweis: Das Ergebnis soll erstmalig für den 11ten Wert von `aktien$henkel` berechnet werden. Der erste Wert Ihrer Lösung beinhaltet dann den Wert aus `mean(aktien$henkel[2:11])`, der 2te Wert `mean(aktien$henkel[3:12])` usw.
 
 *** =hint
 
